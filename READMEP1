@@ -1,0 +1,12 @@
+/* Code written by Robert Gross */
+
+
+To compile code, in command line simply call:
+
+make
+
+Once the program has compiled it can be run by calling the following where {file} is the name of the textfile the user is testing the interpreter with:
+
+./main {file}
+
+Ideas for the approach were taken from the assignment sheet, utilized, and built upon in the sexp.h file
