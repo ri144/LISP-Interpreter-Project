@@ -19,17 +19,25 @@ class SExp{
 		SExp* right;
 		SExp* parent;
 		int layer;
+		bool isTop = false;
 	public:
 		SExp(int, string, SExp*&, int);
 		SExp(SExp& , SExp&, SExp);		
 		SExp(SExp*&, int);
 		SExp();
+		SExp(bool);
+		SExp(int, string);
 		void setRight(SExp*& inRight);
 		void setLeft(SExp*& inLeft);
+		void setParent(SExp*& inParent);
+		void setType(int intype);
 		int getLayer();
 		SExp* getParent();
 		SExp* getLeft();
 		SExp* getRight();
+		int getType();
+		string getVal();
+		string getName();
 		string print_tree();
 	};
 
@@ -67,8 +75,28 @@ SExp::SExp(SExp*& initParent, int initLayer){
 }
 
 SExp::SExp(){
-	//used for top layer
 	type = 3;
+	parent = NULL;
+	left = NULL;
+	right = NULL;
+	layer = 0;
+}
+
+SExp::SExp(bool flag){
+	//used for top layer/ atom
+	isTop = flag;
+	type = 3;
+	parent = NULL;
+	left = NULL;
+	right = NULL;
+	layer = 0;
+}
+
+SExp::SExp(int initType, string value){
+	//used for top layer
+	type = initType;
+	val = value;
+	name = value;
 	parent = NULL;
 	left = NULL;
 	right = NULL;
@@ -83,6 +111,15 @@ void SExp::setLeft(SExp*& inLeft){
 	left = inLeft;
 }
 
+void SExp::setParent(SExp*& inParent){
+	parent = inParent;
+}
+
+void SExp::setType(int intype){
+	type = intype;
+}
+
+
 SExp* SExp::getLeft(){
 	return left;
 }
@@ -93,6 +130,18 @@ SExp* SExp::getRight(){
 
 SExp* SExp::getParent(){
 	return parent;
+}
+
+int SExp::getType(){
+	return type;
+}
+
+string SExp::getVal(){
+	return val;
+}
+
+string SExp::getName(){
+	return name;
 }
 
 string SExp::print_tree(){
@@ -109,8 +158,8 @@ string SExp::print_tree(){
 			//should never get here
 			return "Error: not an S-Expression: Left side of tree empty but right side has data";
 		}
-		else if(right == NULL)
-			return "("+left->print_tree() + ".NIL)";
+		else if(right == NULL) // must be just an atom
+			return left->print_tree();
 		else
 			return "("+left->print_tree() + "." + right->print_tree() + ")";
 	}
