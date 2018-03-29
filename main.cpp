@@ -141,13 +141,11 @@ int main(int argc, char** argv){
 		if(!testSexp.empty()){
 			//empty becuase there is nothing left to get with myfile.get
 			SExp* s_2_test = isSexp(testSexp);
-			//cout<<s_2_test->print_tree()<<endl;
 			if (s_2_test != NULL){
 				SExp* eval_exp = eval(*s_2_test);
 				if (eval_exp != NULL){
 					cout<<eval_exp->print_tree()<<endl;
 				}
-				//cout<<"next"<<endl;
 			}
 		}
 		else{
@@ -155,7 +153,6 @@ int main(int argc, char** argv){
 		}
 		myfile.get(c);  // if this is the eof there will be another $, else there is a carraige return for next
 		//statement which will not be need to be taken care of now for the next iteration
-		//cout<<c<<endl;
 		if (c == '$'){
 			eofCheck = true;
 		}
@@ -169,7 +166,6 @@ SExp* eval(SExp& mystring){
 	if (ATOM(mystring)){
 		if(INT(mystring)){
 			if(mystring.getType() == 3){
-				//cout<<mystring.getLeft()->print_tree()<<endl;
 				return mystring.getLeft();
 			}
 			else if(mystring.getType() == 2){
@@ -177,7 +173,6 @@ SExp* eval(SExp& mystring){
 				return temp;
 			}
 			else{
-				//cout<<mystring.print_tree()<<endl;
 				return &mystring;
 			}
 		}
@@ -190,14 +185,12 @@ SExp* eval(SExp& mystring){
 			return NULL;
 		}
 		if(EQ(mystring,*T) == "true"){
-			//cout<<"T"<<endl;
 			return T;
 		}
 		else if(EQ(mystring,*T) == "NULL"){
 			return NULL;
 		}
 		if(EQ(mystring,*NIL) == "true"){
-			//cout<<"NIL"<<endl;
 			return NIL;
 		}
 		else if(EQ(mystring,*NIL) == "NULL"){
@@ -209,9 +202,7 @@ SExp* eval(SExp& mystring){
 		}
 	}
 	if(ATOM(*CAR(mystring))){
-	//cout<<mystring.print_tree()<<endl;
 		if(!in2(*CAR(mystring))){
-			//cout<<CAR(mystring)->print_tree()<<endl;
 			string check = EQ(*CAR(mystring),*quote);
 			if(check == "true"){
 				
@@ -219,7 +210,6 @@ SExp* eval(SExp& mystring){
 				if(temp->getRight() != NULL){
 					return temp;
 				}
-				//cout<<temp->print_tree()<<endl;
 				return CAR(*temp);  
 			}
 			else if(check == "NULL"){
@@ -246,7 +236,6 @@ SExp* eval(SExp& mystring){
 				if (temp != NULL){
 					SExp* out = apply(*CAR(mystring), *temp);
 					if(out != NULL){
-						//cout<<out->print_tree()<<endl;
 					}
 					return out;
 				}
@@ -262,7 +251,6 @@ SExp* eval(SExp& mystring){
 			if (temp != NULL){
 				SExp* out = apply(*CAR(mystring), *temp);
 				if(out != NULL){
-					//cout<<out->print_tree()<<endl;
 				}
 				return out;
 			}
@@ -289,19 +277,6 @@ void DEFUN(SExp& data){
 	dList.insert(dIter, make_pair(name, &data));
 	dIter++;
 	cout<<"Function " + name + " added to dlist"<<endl;
-	
-	/*list<string> params;
-	pair<bool, list<string>> returnvals = getParams(*CAR(*CDR(data)));
-	if(returnvals.first == false){
-		return;
-	}
-	params = returnvals.second;
-	list<string>::iterator newIter;*/
-	
-	/*for(newIter = params.begin(); newIter!= params.end(); newIter++){
-		cout<<*newIter<<endl;
-	}*/
-	//cout<<(CAR(*CDR(data)))->print_tree()<<endl;
 }
 
 pair<bool, list<string>> getParams(SExp& data){
@@ -334,7 +309,6 @@ SExp* evcon(SExp& data){
 	if(ATOM(*temp)){  //Null will return an error if it is checked right off the bat without confirming it is being evaluated on an atom- make this check first
 		string check = Null(*temp);
 		if(check == "false"){
-			//cout<<CDR(*CAR(data))->print_tree()<<endl;
 			return eval(*CDR(*CAR(data)));
 		}
 		else if(check == "NULL"){
@@ -358,16 +332,13 @@ SExp* evlis(SExp& data){
 		else if(check == "NULL"){
 			return NULL;
 		}
-		//cout<<data.print_tree()<<endl;
 		return &data;
 	}
 	SExp* temp = evlis(*CDR(data));
 	SExp* temp2 = eval(*CAR(data));
 	if (temp != NULL && temp2 != NULL){
 		if(ATOM(*temp)){
-			//cout<<data.getRight()->print_tree()<<endl;
 		}
-		//cout<<temp2->print_tree()<<endl;
 		return CONS(temp2, temp);
 	}
 	return NULL;
@@ -493,7 +464,6 @@ SExp* apply(SExp& data, SExp& f){
 						}
 					}
 				}
-				//cout<<CDR(*CDR(*temp))->print_tree()<<endl;
 				SExp* result = eval(*CDR(*CDR(*temp)));
 				for(newIter = params.begin(); newIter!= params.end(); newIter++){ //remove temporary alist values
 					aList.pop_back();
@@ -894,14 +864,12 @@ SExp* GREATER(SExp& data){
 }
 
 SExp* CAR(SExp& data){
-	//cout<<data.print_tree()<<endl;
 	return data.getLeft();
 }
 
 SExp* CDR(SExp& data){
 
 	if (data.getType() == 3 && data.getRight() == NULL){
-		///cout<<data.getLeft()->getRight()->print_tree()<<endl;
 		return NIL;
 	}
 	return data.getRight();
@@ -921,14 +889,11 @@ string getVal(SExp& data){
 }
 
 SExp* CONS(SExp* data, SExp* data2){
-	//cout<<"h3"<<endl;
 	SExp* temp = new SExp();
 	temp->setLeft(data);
 	data->setParent(temp);
 	temp->setRight(data2);
 	data2->setParent(temp);
-	//cout<<data->print_tree()<<endl;
-	//cout<<data2->print_tree()<<endl;
 	return temp;		
 }
 
@@ -992,7 +957,6 @@ string EQ(SExp& data, SExp& data2){
 	//only compares atoms
 	if(ATOM(data) && ATOM(data2)){
 		if(ATOM(data)){
-			//cout<<"atom check"<<endl;
 			int type = data.getType();
 			int type2 = data2.getType();
 			if(type == type2){
@@ -1007,7 +971,6 @@ string EQ(SExp& data, SExp& data2){
 				else{
 					if(in(data) && in(data2)){\
 						if(getVal(data) == getVal(data2)){
-						//cout<<"same string"<<endl;
 							return "true";
 						}
 						else{
@@ -1044,10 +1007,8 @@ string EQ(SExp& data, SExp& data2){
 					return "false";
 				}
 				else{	//type2 == 2
-					//cout<<data2.print_tree()<<endl;
 					if(in(*data.getLeft()) && in(data2)){\
 						if(getVal(*data.getLeft()) == getVal(data2)){
-						//cout<<"same string"<<endl;
 							return "true";
 						}
 						else{
@@ -1055,7 +1016,6 @@ string EQ(SExp& data, SExp& data2){
 						}
 					}
 					else{
-						//cout<<
 						cout<<"Error in Evaluation3: unbound variable "<<endl;
 						return "NULL";
 					}
@@ -1087,7 +1047,6 @@ string EQ(SExp& data, SExp& data2){
 				else{
 					if(in(data) && in(*data2.getLeft())){\
 						if(getVal(data) == getVal(*data2.getLeft())){
-						//cout<<"same string"<<endl;
 							return "true";
 						}
 						else{
@@ -1130,8 +1089,6 @@ string EQ(SExp& data, SExp& data2){
 			}
 		}
 	}
-	//cout<<data.getType()<<endl;
-	//cout<<data2.getType()<<endl;
 	cout<<"Error in Evaluation: Non-atom found in comparison function 'EQ'"<<endl;	
 	return "NULL";
 }
@@ -1157,7 +1114,6 @@ bool INT(SExp& data){
 }
 
 bool ATOM(SExp& data){
-		//cout<<"here"<<endl;
 	if(data.getType() != 3){
 		return true;
 	}
@@ -1220,7 +1176,6 @@ SExp* openSexp(string data, string evaluated, int usedCount){
 						return NULL;
 					}
 				}
-				//cout<<top->print_tree()<<endl;  //output for part 1
 				return top;
 				//}
 			}
@@ -1361,8 +1316,7 @@ SExp* openSexp(string data, string evaluated, int usedCount){
 			}
 		}
 		else if (data[i] == '.'){
-			//left tree must be full and right tree empty or else error
-			//cout<<data[i+1]<<endl;		
+			//left tree must be full and right tree empty or else error	
 			if(current->getLeft() == NULL){
 				cout<<"Error: not an S-Expression: '.' produced before left sub-tree is full"<<endl;
 				return NULL;
